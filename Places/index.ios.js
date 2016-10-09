@@ -3,7 +3,8 @@ import {
   AppRegistry,
   Text,
   TabBarIOS,
-  StyleSheet
+  StyleSheet,
+  View
 } from 'react-native';
 import PlaceMap from './place_map';
 import AddPlace from './add_place';
@@ -53,6 +54,9 @@ class Places extends Component {
           onPress={this.handleTabPress.bind(this, 0)}
         >
           <PlaceMap annotations={this.state.annotations} />
+          {/* <View style={styles.view}>
+            <Text style={styles.text}>Favorite Places</Text>
+          </View> */}
         </TabBarIOS.Item>
         <TabBarIOS.Item
           title="Place"
@@ -73,6 +77,10 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginTop: 50,
   },
+  view: {
+    backgroundColor: '#fed',
+    flex: 1
+  }
 });
 
 AppRegistry.registerComponent('Places', () => Places);

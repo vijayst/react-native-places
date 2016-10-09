@@ -31,7 +31,6 @@ export default class PlaceMap extends Component {
   render() {
     const { annotations } = this.props;
     annotations.forEach(annotation => {
-      annotation.style = styles.annotation;
       annotation.rightCalloutView = (
         <TouchableHighlight
           style={styles.button}
@@ -63,10 +62,6 @@ const styles = StyleSheet.create({
   },
   map: {
     height: 500
-  },
-  annotation: {
-    width: 200,
-    height: 150
   },
   button: {
     backgroundColor: 'red',
