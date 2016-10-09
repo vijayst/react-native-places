@@ -143,8 +143,119 @@ Finally, we use the `selectedTab state` to update the `selected prop` of the Tab
     <Text style={styles.text}>Add Place</Text>
   </TabBarIOS.Item>
 </TabBarIOS>
+
 ```
 The screenshot of the iOS simulator after adding tabs is shown below.
 ![tabbed navigation](https://cdn.filestackcontent.com/lYOAT1eYR5yFpfZPj1is "tabbed navigation")
 
-## Add Place
+## Map of favourite destinations
+In this section, we will create a map and populate it with our favourite destinations. These destinations are the frequently visited places in the neighbourhood.
+
+Create a new `PlaceMap` component in a file named `place_map.js`. The PlaceMap component will use the MapView component of React Native. The MapView component is designed only for iOS platform. The initial code for `PlaceMap` component is shown below.
+
+```
+import React, { Component } from 'react';
+import {
+  MapView,
+  View,
+  StyleSheet
+} from 'react-native';
+
+export default class PlaceMap extends Component {
+
+  render() {
+    return (
+      <View style={styles.view}>
+        <MapView
+          style={styles.map}
+        />
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  view: {
+    paddingTop: 50,
+    paddingLeft: 30,
+    paddingRight: 30,
+    backgroundColor: '#fed',
+    flex: 1,
+  },
+  map: {
+    height: 500
+  }
+});
+```
+The MapView component is placed within a View component. The View component has styles set for background color and padding. The style of `flex: 1` makes a `Flexbox` which fills the entire screen.
+
+The MapView component should be provided with the initial region. The region is set by the `region prop`. The region has five properties: latitude, longitude, latitudeDelta (zoom), longitudeDelta and title.
+
+```
+<MapView
+  style={styles.map}
+  region={{
+    latitude: 12.9716,
+    longitude: 77.5946,
+    latitudeDelta: 0.2,
+    longitudeDelta: 0.2,
+    title: "Bangalore"
+  }}
+/>
+```
+
+To view the map, the `PlaceMap` component should be placed within the first tab as follows.
+
+```
+<TabBarIOS.Item
+  systemIcon="favorites"
+  selected={this.state.selectedTab === 0}
+  onPress={this.handleTabPress.bind(this, 0)}
+>
+  <PlaceMap />
+</TabBarIOS.Item>
+```
+Our favourite destinations are stored as annotations on the map. Annotation has a title, latitude and longitude. We will define the annotations on the state of the main component `Places`.
+
+```
+constructor() {
+  super();
+  this.state = {
+    selectedTab: 0,
+    annotations: [
+    {
+      title: 'Bus stand',
+      latitude: 12.97,
+      longitude: 77.60,
+    },
+    {
+      title: 'MG Road',
+      latitude: 12.98,
+      longitude: 77.59,
+    },
+    {
+      title: 'Forum Mall',
+      latitude: 12.93,
+      longitude: 77.59,
+    }
+  ]};
+}
+```
+The annotations are supplied to the `PlaceMap` via props.
+
+```
+<PlaceMap annotations={this.state.annotations} />
+```
+The annotations are further passed on to the MapView component. The MapView component displays the annotations as markers on the map. Clicking on one of the markers will show the title.
+
+```
+<MapView
+  style={styles.map}
+  region={this.region}
+  annotations={this.props.annotations}
+/>
+```
+The screenshot of the simulator after adding the MapView component is shown below.
+![MapView](https://cdn.filestackcontent.com/U00oreyoSMWqWun8ovY5 "MapView")
+
+## Form for adding destination

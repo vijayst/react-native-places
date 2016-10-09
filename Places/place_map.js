@@ -18,7 +18,6 @@ export default class PlaceMap extends Component {
     }
   }
   render() {
-
     return (
       <View style={styles.view}>
         <MapView
@@ -27,15 +26,17 @@ export default class PlaceMap extends Component {
           annotations={this.props.annotations}
         />
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   view: {
-    marginTop: 50,
-    marginLeft: 30,
-    marginRight: 30
+    paddingTop: 50,
+    paddingLeft: 30,
+    paddingRight: 30,
+    backgroundColor: '#fed',
+    flex: 1,
   },
   map: {
     height: 500
