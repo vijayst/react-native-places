@@ -463,6 +463,52 @@ handleAddPlace(annotation) {
 
 ```
 The screenshot of the iOS simulator for adding a place is shown below.
-![enter image description here](https://cdn.filestackcontent.com/Bfq8M96DRFGyqWs0qfkE "enter image title here")
+![add places](https://cdn.filestackcontent.com/Bfq8M96DRFGyqWs0qfkE "add places")
 
-## Integration with other apps
+## Integration with Maps app
+We want to integrate our app with the Map app for driving directions. To do this, we add a button to each annotation. On clicking on the button, the user is taken to the Map app for traffic navigation. We will start with making a few changes to the `PlaceMap` component. The render method of the component is modified as below.
+
+```
+render() {
+    const { annotations } = this.props;
+    annotations.forEach(annotation => {
+      annotation.rightCalloutView = (
+        <TouchableHighlight
+          style={styles.button}
+          onPress={this.handleNavigation.bind(this, annotation.latitude, annotation.longitude)}
+        >
+          <Text style={styles.buttonText}>Navigation</Text>
+        </TouchableHighlight>
+      );
+    })
+    return (
+      <View style={styles.view}>
+        <MapView
+          style={styles.map}
+          region={this.region}
+          annotations={annotations}
+        />
+      </View>
+    );
+  }
+}
+```
+Each annotation has a leftCalloutView, rightCalloutView and detailCalloutView. These views display a custom component on the annotation. We will add a TouchableHighlight component to the rightCalloutView. The `onPress` event handler will open the Maps app for traffic navigation.
+
+```
+handleNavigation(la, lo) {
+  const rla = this.region.latitude;
+  const rlo = this.region.longitude;
+  const url = `http://maps.apple.com/?saddr=${rla},${rlo}&daddr=${la},${lo}&dirflg=d`;
+  return Linking.openURL(url);
+}
+```
+Linking module is used to handle incoming deep links and open external deep links. Deep links allow to open another app in the mobile device with some action. The deep link for the Maps app is `http://maps.apple.com`. The query parameters passed to the Maps app are used to generate driving directions. The `saddr` parameter provides the start address which is optional. If the start address is omitted, driving directions are generated from the user's current location. The `daddr` parameter provides the destination address. The `dirflg=d` parameter generates driving directions for cars.
+
+The screenshot for the iOS simulator after the Maps app is opened is shown below.
+![traffic navigation](https://cdn.filestackcontent.com/wvOtNHQSMacuEJXuBees "traffic navigation")
+
+## Summary
+We built a Traffic navigation app for the iOS platform in this tutorial. We created the initial project using `react-native init` command. We set tabbed navigation for our app. The first tab opens a MapView component with favorite places pinned to the map. The second tab allows the user to add more places to the map. Finally, we integrated our app to the Maps app for traffic navigation using callouts on the annotation.
+
+The tutorial has an accompanying [GitHub project](https://github.com/vijayst/react-native-places).
