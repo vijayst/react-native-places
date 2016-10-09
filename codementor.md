@@ -291,12 +291,12 @@ export default class AddPlace extends Component {
         ></TextInput>
         <Text style={styles.text}>Latitude</Text>
         <TextInput
-          keyboardType="numeric"
+          keyboardType="numbers-and-punctuation"
           style={styles.textInput}
         ></TextInput>
         <Text style={styles.text}>Longitude</Text>
         <TextInput
-          keyboardType="numeric"
+          keyboardType="numbers-and-punctuation"
           style={styles.textInput}
         ></TextInput>
         <TouchableHighlight style={styles.button}>
@@ -338,18 +338,10 @@ const styles = StyleSheet.create({
   }
 });
 ```
-The `AddPlace` component has the form and styles for each component in the form. The `AddPlace` component should be placed within the second tab of the `Places` component.
 
-```
-<TabBarIOS.Item
-  title="Place"
-  icon={require('./assets/pin.png')}
-  selected={this.state.selectedTab === 1}
-  onPress={this.handleTabPress.bind(this, 1)}
->
-  <AddPlace />
-</TabBarIOS.Item>
-```
+Handling the keyboard is a bit of a challenge. If you look closely, latitude and longitude have numeric input. The `keyboardType` of the component can be set to `numeric` to enable numeric input. But, numeric input does not allow negative numbers. Both latitude and longitude can be negative. To allow negative numbers, the `keyboardType` should be set to `numbers-and-punctuation`.
+
+
 When the button in the `AddPlace` component is pressed, the place should be added to the map. We will go back to the `AddPlace` component to add that functionality. The three TextInput components are mandatory for the user to fill out. If there is no text, an error message should appear. The text value and error message should be stored in the state. Initialise the state in the constructor.
 
 ```
@@ -418,17 +410,48 @@ handleAddPlace() {
 }
 
 ```
-The AlertIOS component is part of React Native. It is used to display a modal dialog after the action is completed. Handling the keyboard is a bit of a challenge. If you look closely, latitude and longitude have numeric input. The `keyboardType` of the component is set to `numeric` to enable numeric input. On button press, we dismiss the keyboard using the `dismissKeyboard` utility.
 
+The AlertIOS component is part of React Native. It is used to display a modal dialog after the action is completed. We also dismiss the keyboard using the `dismissKeyboard` utility.
 ```
 import dismissKeyboard from 'dismissKeyboard';
 dismissKeyboard();
 ```
-We have to add the location to the map. The annotations state of the `Places` component manages the favorite locations which are viewed in the map. The `onAddPlace` prop is used to pass the location to the parent component.
+
+The error messages are displayed in a custom Error component. Error component is a functional component that accepts a message via props and displays it.
 
 ```
-<AddPlace onAddPlace={this.handleAddPlace.bind(this)} />
+const Error = (props) => {
+  return (
+    <Text style={styles.error}>{props.message}</Text>
+  );
+}
 ```
+The Error component is placed below the TextInput component and is rendered only when there is an error.
+
+```
+<Text style={styles.text}>Title</Text>
+<TextInput
+  style={styles.textInput}
+  value={this.state.title}
+  onChangeText={(title) => this.setState({ title })}
+></TextInput>
+<Error message={this.state.titleError} />
+```
+
+
+The `AddPlace` component should be placed within the second tab of the `Places` component. The `onAddPlace` prop is used to pass the location to the parent component.
+
+```
+<TabBarIOS.Item
+  title="Place"
+  icon={require('./assets/pin.png')}
+  selected={this.state.selectedTab === 1}
+  onPress={this.handleTabPress.bind(this, 1)}
+>
+  <AddPlace onAddPlace={this.handleAddPlace.bind(this)}  />
+</TabBarIOS.Item>
+```
+
 The `handleAddPlace` method of the `Places` component adds the location to the `annotations state`. The state is immutable. The annotations array is copied over to a new array. The new array adds the location as another annotation. The state is updated with the new array.
 
 ```
