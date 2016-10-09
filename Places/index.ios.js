@@ -15,22 +15,23 @@ class Places extends Component {
     this.state = {
       selectedTab: 0,
       annotations: [
-      {
-        title: 'Bus stand',
-        latitude: 12.97,
-        longitude: 77.60,
-      },
-      {
-        title: 'MG Road',
-        latitude: 12.98,
-        longitude: 77.59,
-      },
-      {
-        title: 'Forum Mall',
-        latitude: 12.93,
-        longitude: 77.59,
-      }
-    ]};
+        {
+          title: 'Smithsonian Museum',
+          latitude: 38.8980,
+          longitude: -77.0230
+        },
+        {
+          title: 'UMCP',
+          latitude: 38.9869,
+          longitude: -76.9426
+        },
+        {
+          title: 'Arlington',
+          latitude: 38.8783,
+          longitude: -77.0687
+        }
+      ]
+    };
   }
 
   handleTabPress(tab) {

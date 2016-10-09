@@ -73,7 +73,7 @@ export default class AddPlace extends Component {
         <Error message={this.state.titleError} />
         <Text style={styles.text}>Latitude</Text>
         <TextInput
-          keyboardType="numeric"
+          keyboardType="numbers-and-punctuation"
           style={styles.textInput}
           value={this.state.latitude}
           onChangeText={(latitude) => this.setState({ latitude })}
@@ -81,7 +81,7 @@ export default class AddPlace extends Component {
         <Error message={this.state.latitudeError} />
         <Text style={styles.text}>Longitude</Text>
         <TextInput
-          keyboardType="numeric"
+          keyboardType="numbers-and-punctuation"
           style={styles.textInput}
           value={this.state.longitude}
           onChangeText={(longitude) => this.setState({ longitude })}
