@@ -21,7 +21,7 @@ class Places extends Component {
 
   render() {
     return (
-    <TabBarIOS>
+      <TabBarIOS>
         <TabBarIOS.Item
           systemIcon="favorites"
           selected={this.state.selectedTab === 0}
