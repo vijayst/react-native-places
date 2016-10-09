@@ -258,4 +258,187 @@ The annotations are further passed on to the MapView component. The MapView comp
 The screenshot of the simulator after adding the MapView component is shown below.
 ![MapView](https://cdn.filestackcontent.com/U00oreyoSMWqWun8ovY5 "MapView")
 
-## Form for adding destination
+
+## Form for adding places
+Users interact with an app using various input component. The TextInput component accepts text input. The TouchableHighlight component responds to user touches and works like a button. Other components for accepting user input are Picker, Slider and Switch component.
+
+In this section, we will add a form with three TextInput components and a TouchableHighlight component. The TextInput components correspond to `Title`, `Latitude` and `Longitude` of a place. The initial code for the `AddPlace` component is shown below.
+
+```
+import React, { Component } from 'react';
+import {
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View,
+  StyleSheet
+} from 'react-native';
+
+export default class AddPlace extends Component {
+
+
+  render() {
+    return (
+      <View style={styles.view}>
+        <Text style={styles.text}>Title</Text>
+        <TextInput
+          style={styles.textInput}
+        ></TextInput>
+        <Text style={styles.text}>Latitude</Text>
+        <TextInput
+          keyboardType="numeric"
+          style={styles.textInput}
+        ></TextInput>
+        <Text style={styles.text}>Longitude</Text>
+        <TextInput
+          keyboardType="numeric"
+          style={styles.textInput}
+        ></TextInput>
+        <TouchableHighlight style={styles.button}>
+          <Text style={styles.buttonText}>Add Place</Text>
+        </TouchableHighlight>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  view: {
+    paddingTop: 50,
+    paddingLeft: 30,
+    paddingRight: 30,
+    backgroundColor: '#fed',
+    flex: 1
+  },
+  text: {
+    color: '#333333',
+    marginBottom: 5
+  },
+  textInput: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 5
+  },
+  button: {
+    backgroundColor: '#ff7f50',
+    padding: 12,
+    borderRadius: 6
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  }
+});
+```
+The `AddPlace` component has the form and styles for each component in the form. The `AddPlace` component should be placed within the second tab of the `Places` component.
+
+```
+<TabBarIOS.Item
+  title="Place"
+  icon={require('./assets/pin.png')}
+  selected={this.state.selectedTab === 1}
+  onPress={this.handleTabPress.bind(this, 1)}
+>
+  <AddPlace />
+</TabBarIOS.Item>
+```
+When the button in the `AddPlace` component is pressed, the place should be added to the map. We will go back to the `AddPlace` component to add that functionality. The three TextInput components are mandatory for the user to fill out. If there is no text, an error message should appear. The text value and error message should be stored in the state. Initialise the state in the constructor.
+
+```
+constructor() {
+  super();
+  this.state = {
+    title: '',
+    latitude: '',
+    longitude: '',
+    titleError: '',
+    latitudeError: '',
+    longitudeError: ''
+  };
+}
+```
+The TextInput component should be a controlled component. The value is derived from the state. The onChangeText event is handled to set the corresponding state.
+
+```
+<TextInput
+  style={styles.textInput}
+  value={this.state.title}
+  onChangeText={(title) => this.setState({ title })}
+>
+</TextInput>
+```
+The onPress event of the TouchableHighlight component should be handled. The event handler checks if all the fields are filled out. It displays the error messages, if any. If there are no error messages, the location is added to the map.
+
+```
+handleAddPlace() {
+
+  const { title, latitude, longitude } = this.state;
+  let titleError = '';
+  let latitudeError = '';
+  let longitudeError = '';
+  if (!title) {
+    titleError = 'Name is required.';
+  }
+  if (!latitude) {
+    latitudeError = 'Latitude is required.';
+  }
+  if (!longitude) {
+    longitudeError = 'Longitude is required.';
+  }
+
+  this.setState({
+    titleError,
+    latitudeError,
+    longitudeError
+  });
+
+  const isError = titleError || latitudeError || longitudeError;
+  if (!isError) {
+    this.props.onAddPlace({
+      title,
+      latitude: parseFloat(latitude),
+      longitude: parseFloat(longitude)
+    });
+
+    AlertIOS.alert(
+      'Place added',
+      'Your place is added to the map. Click on the Favorites tab to view.'
+    );
+  }
+
+  dismissKeyboard();
+}
+
+```
+The AlertIOS component is part of React Native. It is used to display a modal dialog after the action is completed. Handling the keyboard is a bit of a challenge. If you look closely, latitude and longitude have numeric input. The `keyboardType` of the component is set to `numeric` to enable numeric input. On button press, we dismiss the keyboard using the `dismissKeyboard` utility.
+
+```
+import dismissKeyboard from 'dismissKeyboard';
+dismissKeyboard();
+```
+We have to add the location to the map. The annotations state of the `Places` component manages the favorite locations which are viewed in the map. The `onAddPlace` prop is used to pass the location to the parent component.
+
+```
+<AddPlace onAddPlace={this.handleAddPlace.bind(this)} />
+```
+The `handleAddPlace` method of the `Places` component adds the location to the `annotations state`. The state is immutable. The annotations array is copied over to a new array. The new array adds the location as another annotation. The state is updated with the new array.
+
+```
+handleAddPlace(annotation) {
+  const annotations = this.state.annotations.slice();
+  annotations.push(annotation);
+  this.setState({ annotations });
+}
+
+```
+The screenshot of the iOS simulator for adding a place is shown below.
+![enter image description here](https://cdn.filestackcontent.com/zwEfFVBXQQ6ya5Y2DsOA "enter image title here")
+
+The screenshot of the iOS simulator with the new location in the map is shown below.
+![enter image description here](https://cdn.filestackcontent.com/VCdYnUmRFmLFUqrUL8FH "enter image title here")
+
+
+## Integration with other apps

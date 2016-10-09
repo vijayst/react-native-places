@@ -31,7 +31,6 @@ class Places extends Component {
         longitude: 77.59,
       }
     ]};
-    this.handleAddPlace = this.handleAddPlace.bind(this);
   }
 
   handleTabPress(tab) {
@@ -60,7 +59,7 @@ class Places extends Component {
           selected={this.state.selectedTab === 1}
           onPress={this.handleTabPress.bind(this, 1)}
         >
-          <AddPlace onAddPlace={this.handleAddPlace} />
+          <AddPlace onAddPlace={this.handleAddPlace.bind(this)} />
         </TabBarIOS.Item>
       </TabBarIOS>
     );

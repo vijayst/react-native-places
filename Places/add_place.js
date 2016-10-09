@@ -20,7 +20,6 @@ export default class AddPlace extends Component {
       latitudeError: '',
       longitudeError: ''
     };
-    this.handleAddPlace = this.handleAddPlace.bind(this);
   }
 
   handleAddPlace() {
@@ -88,7 +87,7 @@ export default class AddPlace extends Component {
           onChangeText={(longitude) => this.setState({ longitude })}
         ></TextInput>
         <Error message={this.state.longitudeError} />
-        <TouchableHighlight style={styles.button} onPress={this.handleAddPlace}>
+        <TouchableHighlight style={styles.button} onPress={this.handleAddPlace.bind(this)}>
           <Text style={styles.buttonText}>Add Place</Text>
         </TouchableHighlight>
       </View>
