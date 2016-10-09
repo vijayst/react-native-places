@@ -5,14 +5,32 @@ import {
   TabBarIOS,
   StyleSheet
 } from 'react-native';
+import PlaceMap from './place_map';
+import AddPlace from './add_place';
 
 class Places extends Component {
 
   constructor() {
     super();
     this.state = {
-      selectedTab: 0
-    };
+      selectedTab: 0,
+      annotations: [
+      {
+        title: 'Bus stand',
+        latitude: 12.97,
+        longitude: 77.60,
+      },
+      {
+        title: 'MG Road',
+        latitude: 12.98,
+        longitude: 77.59,
+      },
+      {
+        title: 'Forum Mall',
+        latitude: 12.93,
+        longitude: 77.59,
+      }
+    ]};
   }
 
   handleTabPress(tab) {
@@ -27,7 +45,7 @@ class Places extends Component {
           selected={this.state.selectedTab === 0}
           onPress={this.handleTabPress.bind(this, 0)}
         >
-          <Text style={styles.text}>Favorite Places</Text>
+          <PlaceMap annotations={this.state.annotations} />
         </TabBarIOS.Item>
         <TabBarIOS.Item
           title="Place"
@@ -35,7 +53,7 @@ class Places extends Component {
           selected={this.state.selectedTab === 1}
           onPress={this.handleTabPress.bind(this, 1)}
         >
-          <Text style={styles.text}>Add Place</Text>
+          <AddPlace />
         </TabBarIOS.Item>
       </TabBarIOS>
     );

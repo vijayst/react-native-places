@@ -88,3 +88,63 @@ Within our tabs, we place a `Text` component. The text component is displayed in
 ```
 Image files are typically stored in an assets folder. The icon size is of 32 x 32. The image for pin.png is:
 ![icon](https://cdn.filestackcontent.com/qbBIfIaPRr6BOn5gk6TH "icon")
+
+The Text component is displayed in the top left corner of the view. We will style the component to make it viewable. Styles are provided by the StyleSheet component. Define a styles variable as follows.
+
+```
+const styles = StyleSheet.create({
+  text: {
+    textAlign: 'center',
+    color: '#333333',
+    marginTop: 50,
+  },
+});
+```
+The text style defined above gives a text color, aligns the text to the center and moves the text 50 pixels from the top of the view. Attaching the style to the Text component is very similar to how styles are attached for a React component.
+
+```
+<Text style={styles.text}>Favorite Places</Text>
+<Text style={styles.text}>Add Place</Text>
+```
+When the user clicks on a tab, we want to highlight the tab. Highlighting the tab is done by changing the selected prop of the corresponding tab to true. To accomplish this, we define the selectedTab state. The selectedTab is initially set to zero which corresponds to the first tab.
+
+```
+constructor() {
+  super();
+  this.state = {
+    selectedTab: 0
+  };
+}
+```
+To change the selectedTab, we handle the `onPress` event of the `TabBarIOS.Item`.
+
+```
+handleTabPress(tab) {
+  this.setState({ selectedTab: tab })
+}
+```
+Finally, we use the `selectedTab state` to update the `selected prop` of the Tab. The complete JSX is shown for clarity.
+
+```
+<TabBarIOS>
+  <TabBarIOS.Item
+    systemIcon="favorites"
+    selected={this.state.selectedTab === 0}
+    onPress={this.handleTabPress.bind(this, 0)}
+  >
+    <Text style={styles.text}>Favorite Places</Text>
+  </TabBarIOS.Item>
+  <TabBarIOS.Item
+    title="Place"
+    icon={require('./assets/pin.png')}
+    selected={this.state.selectedTab === 1}
+    onPress={this.handleTabPress.bind(this, 1)}
+  >
+    <Text style={styles.text}>Add Place</Text>
+  </TabBarIOS.Item>
+</TabBarIOS>
+```
+The screenshot of the iOS simulator after adding tabs is shown below.
+![tabbed navigation](https://cdn.filestackcontent.com/lYOAT1eYR5yFpfZPj1is "tabbed navigation")
+
+## Add Place
