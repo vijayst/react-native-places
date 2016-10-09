@@ -41,27 +41,18 @@ export default class PlaceMap extends Component {
       );
     })
     return (
-      <View style={styles.view}>
-        <MapView
-          style={styles.map}
-          region={this.region}
-          annotations={annotations}
-        />
-      </View>
+      <MapView
+        style={styles.map}
+        region={this.region}
+        annotations={annotations}
+      />
     );
   }
 }
 
 const styles = StyleSheet.create({
-  view: {
-    paddingTop: 50,
-    paddingLeft: 30,
-    paddingRight: 30,
-    backgroundColor: '#fed',
-    flex: 1,
-  },
   map: {
-    height: 500
+    flex: 1
   },
   button: {
     backgroundColor: 'red',
