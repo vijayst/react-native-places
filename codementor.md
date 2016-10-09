@@ -8,16 +8,10 @@ React allows to build UI components. UI components are composed of layout, style
 
 React Native has a set of in-built React components. For example, there are components such as TabBar, Navigator, Switch, DatePicker and MapView. These components get translated to native iOS or Android components. The layout of the components is controlled by an implementation of [Flexbox (CSS)](https://facebook.github.io/react-native/docs/flexbox.html). Styles specified by props on the React Native component are translated to styles on the native UIKit component. In this way, React Native wraps the UIKit on iOS just as React wraps the DOM on web.
 
-In this tutorial, we will build a sample app using React Native.
+In this tutorial, we will build a sample app using React Native. The tutorial assumes that you have some knowledge of working with React and JavaScript.
 
 ## Traffic Navigation App
-Our sample app allows the user to view favourite places on a map in the neighbourhood. There are two tabs in the app: `Places tab` and `Add Place tab`. The `Places tab` shows the favourite places in a MapView component. (Show image)
-
-The `Add Place` tab adds a place to the Map. (Show image).
-
-On clicking on a place in the map, the user is taken to Google maps with driving directions.
-
-We will build our sample app for the iOS platform.
+Our sample app allows the user to view favorite places on a map in the neighbourhood. There are two tabs in the app: `Places tab` and `Add Place tab`. The `Places tab` shows the favourite places in a MapView component. The `Add Place` tab adds a place to the Map. On clicking on one of the favorite places in the map, the user is taken to Maps with driving directions. We will build the sample app for the iOS platform.
 
 ## Create the app
 The [Getting Started](https://facebook.github.io/react-native/docs/getting-started.html) page has detailed instructions on how to install React Native on your system. For a Mac, install node and watchman.
@@ -39,7 +33,7 @@ react-native init Places
 To run the app in iOS simulator, use the run-ios command from react-native within the project folder.
 
 ```
-cd AwesomeProject
+cd Places
 react-native run-ios
 ```
 The iOS simulator is started. Our project is built. A new terminal window opens up that listens on port 8081 and provides the script bundle. When an app is deployed to the AppStore, the script bundle is either embedded within the app or provided by a service such as AppHub. The built app is installed in the simulator and opened. The screenshot of the initial project is shown below.
@@ -67,30 +61,20 @@ import {
     systemIcon="favorites"
     selected={true}
   >
-    <Text>Favorite Places</Text>
+    <View>
+      <Text>Favorite Places</Text>
+    </View>
   </TabBarIOS.Item>
   <TabBarIOS.Item
     systemIcon="more"
   >
-    <Text>Add Place</Text>
+    <View>
+      <Text>Add Place</Text>
+    </View>
   </TabBarIOS.Item>
 </TabBarIOS>
 ```
-Within our tabs, we place a `Text` component. The text component is displayed in the view when a tab is selected. For the second tab, we will use a custom icon and a title.
-
-```
-<TabBarIOS.Item
-  title="Place"
-  icon={require('./assets/pin.png')}
->
-  <Text>Add Place</Text>
-</TabBarIOS.Item>
-```
-Image files are typically stored in an assets folder. The icon size is of 32 x 32. The image for pin.png is:
-![icon](https://cdn.filestackcontent.com/qbBIfIaPRr6BOn5gk6TH "icon")
-
-The Text component is displayed in the top left corner of the view. We will style the component to make it viewable. Styles are provided by the StyleSheet component. Define a styles variable as follows.
-
+Within our tabs, we place the child component. The text component is displayed in the view when a tab is selected. The Text component is displayed in the top left corner of the view. We will style the component using the StyleSheet component.
 ```
 const styles = StyleSheet.create({
   text: {
@@ -98,14 +82,30 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginTop: 50,
   },
+  view: {
+    backgroundColor: '#fed',
+    flex: 1
+  }
 });
 ```
-The text style defined above gives a text color, aligns the text to the center and moves the text 50 pixels from the top of the view. Attaching the style to the Text component is very similar to how styles are attached for a React component.
+The text style defined above gives a text color, aligns the text to the center and moves the text 50 pixels from the top of the view. The view is styled with background color. The style of `flex: 1` makes a `Flexbox` which fills the entire screen. Styles are attached to the component just as for any other React component.
+```
+<View style={styles.view}>
+  <Text style={styles.text}>Favorite Places</Text>
+<View>
+```
+
+For the second tab, we will use a custom icon and a title. Image files are typically stored in an assets folder. The icon size is of 32 x 32. The image for pin.png is:
+![icon](https://cdn.filestackcontent.com/qbBIfIaPRr6BOn5gk6TH "icon")
 
 ```
-<Text style={styles.text}>Favorite Places</Text>
-<Text style={styles.text}>Add Place</Text>
+<TabBarIOS.Item
+  title="Place"
+  icon={require('./assets/pin.png')}
+>
+</TabBarIOS.Item>
 ```
+
 When the user clicks on a tab, we want to highlight the tab. Highlighting the tab is done by changing the selected prop of the corresponding tab to true. To accomplish this, we define the selectedTab state. The selectedTab is initially set to zero which corresponds to the first tab.
 
 ```
@@ -132,7 +132,9 @@ Finally, we use the `selectedTab state` to update the `selected prop` of the Tab
     selected={this.state.selectedTab === 0}
     onPress={this.handleTabPress.bind(this, 0)}
   >
-    <Text style={styles.text}>Favorite Places</Text>
+    <View style={styles.view}>
+      <Text style={styles.text}>Favorite Places</Text>
+    </View>
   </TabBarIOS.Item>
   <TabBarIOS.Item
     title="Place"
@@ -140,13 +142,15 @@ Finally, we use the `selectedTab state` to update the `selected prop` of the Tab
     selected={this.state.selectedTab === 1}
     onPress={this.handleTabPress.bind(this, 1)}
   >
-    <Text style={styles.text}>Add Place</Text>
+    <View style={styles.view}>
+      <Text style={styles.text}>Add Place</Text>
+    </View>
   </TabBarIOS.Item>
 </TabBarIOS>
 
 ```
 The screenshot of the iOS simulator after adding tabs is shown below.
-![tabbed navigation](https://cdn.filestackcontent.com/lYOAT1eYR5yFpfZPj1is "tabbed navigation")
+![tabbed navigation](https://cdn.filestackcontent.com/npWi3tZhTsWupWDw2FJF "tabbed navigation")
 
 ## Map of favourite destinations
 In this section, we will create a map and populate it with our favourite destinations. These destinations are the frequently visited places in the neighbourhood.
@@ -187,7 +191,7 @@ const styles = StyleSheet.create({
   }
 });
 ```
-The MapView component is placed within a View component. The View component has styles set for background color and padding. The style of `flex: 1` makes a `Flexbox` which fills the entire screen.
+The MapView component is placed within a View component. The View component has styles set for background color and padding.
 
 The MapView component should be provided with the initial region. The region is set by the `region prop`. The region has five properties: latitude, longitude, latitudeDelta (zoom), longitudeDelta and title.
 
@@ -195,11 +199,11 @@ The MapView component should be provided with the initial region. The region is 
 <MapView
   style={styles.map}
   region={{
-    latitude: 12.9716,
-    longitude: 77.5946,
+    latitude: 38.8977,
+    longitude: -77.0365,
     latitudeDelta: 0.2,
     longitudeDelta: 0.2,
-    title: "Bangalore"
+    title: "White House"
   }}
 />
 ```
@@ -215,7 +219,7 @@ To view the map, the `PlaceMap` component should be placed within the first tab 
   <PlaceMap />
 </TabBarIOS.Item>
 ```
-Our favourite destinations are stored as annotations on the map. Annotation has a title, latitude and longitude. We will define the annotations on the state of the main component `Places`.
+Our favorite destinations are stored as annotations on the map. Annotation has a title, latitude and longitude. We will define the annotations on the state of the main component `Places`.
 
 ```
 constructor() {
@@ -223,22 +227,23 @@ constructor() {
   this.state = {
     selectedTab: 0,
     annotations: [
-    {
-      title: 'Bus stand',
-      latitude: 12.97,
-      longitude: 77.60,
-    },
-    {
-      title: 'MG Road',
-      latitude: 12.98,
-      longitude: 77.59,
-    },
-    {
-      title: 'Forum Mall',
-      latitude: 12.93,
-      longitude: 77.59,
-    }
-  ]};
+      {
+        title: 'Smithsonian Museum',
+        latitude: 38.8980,
+        longitude: -77.0230
+      },
+      {
+        title: 'UMCP',
+        latitude: 38.9869,
+        longitude: -76.9426
+      },
+      {
+        title: 'Arlington',
+        latitude: 38.8783,
+        longitude: -77.0687
+      }
+    ]
+  };
 }
 ```
 The annotations are supplied to the `PlaceMap` via props.
@@ -256,7 +261,7 @@ The annotations are further passed on to the MapView component. The MapView comp
 />
 ```
 The screenshot of the simulator after adding the MapView component is shown below.
-![MapView](https://cdn.filestackcontent.com/U00oreyoSMWqWun8ovY5 "MapView")
+![enter image description here](https://cdn.filestackcontent.com/V5bei1VITefYmfqY1HXQ "enter image title here")
 
 
 ## Form for adding places
@@ -435,10 +440,6 @@ handleAddPlace(annotation) {
 
 ```
 The screenshot of the iOS simulator for adding a place is shown below.
-![enter image description here](https://cdn.filestackcontent.com/zwEfFVBXQQ6ya5Y2DsOA "enter image title here")
-
-The screenshot of the iOS simulator with the new location in the map is shown below.
-![enter image description here](https://cdn.filestackcontent.com/VCdYnUmRFmLFUqrUL8FH "enter image title here")
-
+![enter image description here](https://cdn.filestackcontent.com/Bfq8M96DRFGyqWs0qfkE "enter image title here")
 
 ## Integration with other apps
