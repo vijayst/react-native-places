@@ -1,52 +1,37 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   AppRegistry,
-  StyleSheet,
   Text,
-  View
+  TabBarIOS,
+  StyleSheet
 } from 'react-native';
 
 class Places extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
+    <TabBarIOS>
+        <TabBarIOS.Item
+          systemIcon="favorites"
+          selected={true}
+        >
+          <Text style={styles.text}>Favorite Places</Text>
+        </TabBarIOS.Item>
+        <TabBarIOS.Item
+          title="Place"
+          icon={require('./assets/pin.png')}
+        >
+          <Text style={styles.text}>Add Place</Text>
+        </TabBarIOS.Item>
+      </TabBarIOS>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
+  text: {
     textAlign: 'center',
     color: '#333333',
-    marginBottom: 5,
+    marginTop: 50,
   },
 });
 
